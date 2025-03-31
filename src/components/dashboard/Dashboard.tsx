@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { BalanceCard } from "@/components/dashboard/BalanceCard";
 import { ExpensePieChart } from "@/components/dashboard/ExpensePieChart";
 import { BalanceLineChart } from "@/components/dashboard/BalanceLineChart";
-import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
 import { BudgetProgress } from "@/components/dashboard/BudgetProgress";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
@@ -18,14 +17,11 @@ import {
   getTotalIncome,
   getTotalExpenses,
   getTotalBalance,
-  getAccountById,
-  getCategoryById
 } from "@/lib/storage";
 
 export function Dashboard() {
   const { toast } = useToast();
   const [data, setData] = useState<FinanceData | null>(null);
-  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
   const [expenseCategories, setExpenseCategories] = useState<any[]>([]);
   const [balanceHistory, setBalanceHistory] = useState<any[]>([]);
   const [budgetCategories, setBudgetCategories] = useState<any[]>([]);
@@ -41,26 +37,6 @@ export function Dashboard() {
     startDate.setDate(startDate.getDate() - 30);
     
     const transactions = getTransactionsForDateRange(financeData, startDate, endDate);
-    
-    // Transform transactions for the RecentTransactions component
-    const transformedTransactions = transactions
-      .slice(0, 5) // Get only the last 5 transactions
-      .map((t) => {
-        const account = getAccountById(financeData, t.accountId);
-        const category = getCategoryById(financeData, t.categoryId);
-        return {
-          id: t.id,
-          description: t.description,
-          amount: t.amount,
-          type: t.type,
-          date: t.date,
-          category: category?.name || "Unknown",
-          account: account?.name || "Unknown"
-        };
-      })
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    
-    setRecentTransactions(transformedTransactions);
     
     // Get expense categories
     const expenseTotals = getTotalsByCategory(financeData, transactions, "expense");
@@ -267,8 +243,7 @@ export function Dashboard() {
         <ExpensePieChart data={expenseCategories} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <RecentTransactions transactions={recentTransactions} />
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
         <BudgetProgress categories={budgetCategories} />
       </div>
     </div>

@@ -16,44 +16,6 @@ const Settings = () => {
   const { theme, setTheme } = useTheme();
   const [email, setEmail] = useState("miglourenco19@gmail.com");
   const [autoReport, setAutoReport] = useState(true);
-  const [exportLoading, setExportLoading] = useState(false);
-  const [importLoading, setImportLoading] = useState(false);
-  
-  const handleExportData = () => {
-    setExportLoading(true);
-    
-    // Simulate export process
-    setTimeout(() => {
-      setExportLoading(false);
-      toast({
-        title: "Dados exportados com sucesso",
-        description: "Seu backup foi realizado com sucesso."
-      });
-    }, 1000);
-  };
-  
-  const handleImportData = () => {
-    // Trigger file input click
-    const fileInput = document.getElementById("import-file");
-    if (fileInput) {
-      fileInput.click();
-    }
-  };
-  
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-    
-    setImportLoading(true);
-    
-    // Simulate import process
-    setTimeout(() => {
-      setImportLoading(false);
-      toast({
-        title: "Dados importados com sucesso",
-        description: "Seus dados foram restaurados com sucesso."
-      });
-    }, 1500);
-  };
   
   const handleSaveEmail = () => {
     toast({
@@ -70,10 +32,9 @@ const Settings = () => {
           <h1 className="text-3xl font-bold mb-6">Configurações</h1>
           
           <Tabs defaultValue="general">
-            <TabsList className="mb-6 grid w-full max-w-md grid-cols-3 h-10">
+            <TabsList className="mb-6 grid w-full max-w-md grid-cols-2 h-10">
               <TabsTrigger value="general">Geral</TabsTrigger>
               <TabsTrigger value="reports">Relatórios</TabsTrigger>
-              <TabsTrigger value="data">Dados</TabsTrigger>
             </TabsList>
             
             <TabsContent value="general">
@@ -136,51 +97,6 @@ const Settings = () => {
                         />
                         <Button onClick={handleSaveEmail}>Salvar</Button>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="data">
-              <div className="grid gap-6 max-w-2xl">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Backup e Sincronização</CardTitle>
-                    <CardDescription>Exporte e importe seus dados</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Button 
-                        onClick={handleExportData}
-                        disabled={exportLoading}
-                        className="w-full"
-                      >
-                        {exportLoading ? "Exportando..." : "Exportar Dados"}
-                      </Button>
-                      
-                      <Button 
-                        onClick={handleImportData}
-                        disabled={importLoading}
-                        variant="outline"
-                        className="w-full"
-                      >
-                        {importLoading ? "Importando..." : "Importar Dados"}
-                      </Button>
-                      <Input 
-                        id="import-file" 
-                        type="file" 
-                        accept=".json"
-                        onChange={handleFileChange}
-                        className="hidden"
-                      />
-                    </div>
-                    
-                    <div className="text-sm text-muted-foreground">
-                      <p>Os dados são armazenados localmente em seu navegador.</p>
-                      <p className="mt-1">
-                        Exporte regularmente para evitar perda de dados ao limpar o cache do navegador.
-                      </p>
                     </div>
                   </CardContent>
                 </Card>

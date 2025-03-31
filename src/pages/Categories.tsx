@@ -32,6 +32,14 @@ const Categories = () => {
   const [newCategoryColor, setNewCategoryColor] = useState("#6b7280");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
+  
+  // Para edição de categoria
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [editCategoryName, setEditCategoryName] = useState("");
+  const [editCategoryType, setEditCategoryType] = useState<"expense" | "income">("expense");
+  const [editCategoryBudget, setEditCategoryBudget] = useState("");
+  const [editCategoryColor, setEditCategoryColor] = useState("");
 
   useEffect(() => {
     const financeData = initializeData();
@@ -61,6 +69,41 @@ const Categories = () => {
     setNewCategoryBudget("");
     setNewCategoryColor("#6b7280");
     setDialogOpen(false);
+  };
+  
+  const handleEditClick = (category: any) => {
+    setEditingCategory(category);
+    setEditCategoryName(category.name);
+    setEditCategoryType(category.type);
+    setEditCategoryBudget(category.budget ? category.budget.toString() : "");
+    setEditCategoryColor(category.color);
+    setEditDialogOpen(true);
+  };
+  
+  const handleUpdateCategory = () => {
+    if (!data || !editingCategory || !editCategoryName) return;
+    
+    const updatedCategory = {
+      ...editingCategory,
+      name: editCategoryName,
+      type: editCategoryType,
+      budget: editCategoryBudget ? parseFloat(editCategoryBudget) : undefined,
+      color: editCategoryColor,
+    };
+    
+    // Update category in the data
+    const updatedCategories = data.categories.map(cat => 
+      cat.id === editingCategory.id ? updatedCategory : cat
+    );
+    
+    setData({
+      ...data,
+      categories: updatedCategories,
+    });
+    
+    // Reset form and close dialog
+    setEditingCategory(null);
+    setEditDialogOpen(false);
   };
 
   const filteredCategories = (type: string) => {
@@ -157,6 +200,73 @@ const Categories = () => {
             </Dialog>
           </div>
 
+          {/* Dialog para edição de categoria */}
+          <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Editar Categoria</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-3">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-name">Nome da Categoria</Label>
+                  <Input
+                    id="edit-name"
+                    value={editCategoryName}
+                    onChange={(e) => setEditCategoryName(e.target.value)}
+                    placeholder="Ex: Alimentação, Transporte"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-type">Tipo</Label>
+                  <Select
+                    value={editCategoryType}
+                    onValueChange={(value) => setEditCategoryType(value as "expense" | "income")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Tipo de Categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="expense">Despesa</SelectItem>
+                      <SelectItem value="income">Receita</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {editCategoryType === "expense" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-budget">Orçamento Mensal (opcional)</Label>
+                    <Input
+                      id="edit-budget"
+                      type="number"
+                      value={editCategoryBudget}
+                      onChange={(e) => setEditCategoryBudget(e.target.value)}
+                      placeholder="0.00"
+                    />
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <Label htmlFor="edit-color">Cor</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="edit-color"
+                      type="color"
+                      value={editCategoryColor}
+                      onChange={(e) => setEditCategoryColor(e.target.value)}
+                      className="w-10 h-10 p-1 rounded-full cursor-pointer"
+                    />
+                    <Input
+                      value={editCategoryColor}
+                      onChange={(e) => setEditCategoryColor(e.target.value)}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+                <Button className="w-full" onClick={handleUpdateCategory}>
+                  Atualizar Categoria
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="mb-6 grid w-full grid-cols-3 h-10">
               <TabsTrigger value="all">Todas</TabsTrigger>
@@ -167,7 +277,11 @@ const Categories = () => {
             <TabsContent value="all" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredCategories("all").map((category) => (
-                  <CategoryCard key={category.id} category={category} />
+                  <CategoryCard 
+                    key={category.id} 
+                    category={category} 
+                    onEdit={handleEditClick} 
+                  />
                 ))}
               </div>
             </TabsContent>
@@ -175,7 +289,11 @@ const Categories = () => {
             <TabsContent value="expense" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredCategories("expense").map((category) => (
-                  <CategoryCard key={category.id} category={category} />
+                  <CategoryCard 
+                    key={category.id} 
+                    category={category} 
+                    onEdit={handleEditClick} 
+                  />
                 ))}
               </div>
             </TabsContent>
@@ -183,7 +301,11 @@ const Categories = () => {
             <TabsContent value="income" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredCategories("income").map((category) => (
-                  <CategoryCard key={category.id} category={category} />
+                  <CategoryCard 
+                    key={category.id} 
+                    category={category} 
+                    onEdit={handleEditClick} 
+                  />
                 ))}
               </div>
             </TabsContent>
@@ -195,7 +317,7 @@ const Categories = () => {
 };
 
 // Helper component for category cards
-const CategoryCard = ({ category }: { category: any }) => {
+const CategoryCard = ({ category, onEdit }: { category: any, onEdit: (category: any) => void }) => {
   return (
     <Card>
       <CardHeader className="pb-2 flex flex-row justify-between items-start">
@@ -207,7 +329,12 @@ const CategoryCard = ({ category }: { category: any }) => {
           <CardTitle className="text-lg">{category.name}</CardTitle>
         </div>
         <div className="flex gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8"
+            onClick={() => onEdit(category)}
+          >
             <Pencil className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive">
