@@ -15,11 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { initializeData, FinanceData } from "@/lib/storage";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Accounts = () => {
   const [data, setData] = useState<FinanceData | null>(null);
   const [newAccountName, setNewAccountName] = useState("");
   const [newAccountBalance, setNewAccountBalance] = useState("");
+  const [newAccountType, setNewAccountType] = useState<"checking" | "savings" | "credit" | "investment" | "wallet">("checking");
   const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const Accounts = () => {
       id: `account-${Date.now()}`,
       name: newAccountName,
       balance: parseFloat(newAccountBalance) || 0,
-      type: "checking",
+      type: newAccountType,
     };
     
     // Add new account (this is just UI simulation, not actually storing in localStorage)
@@ -47,6 +49,7 @@ const Accounts = () => {
     // Reset form
     setNewAccountName("");
     setNewAccountBalance("");
+    setNewAccountType("checking");
     setDialogOpen(false);
   };
 
@@ -92,6 +95,24 @@ const Accounts = () => {
                       placeholder="0.00"
                     />
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="type">Tipo de Conta</Label>
+                    <Select 
+                      value={newAccountType} 
+                      onValueChange={(value) => setNewAccountType(value as "checking" | "savings" | "credit" | "investment" | "wallet")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="checking">Conta Corrente</SelectItem>
+                        <SelectItem value="savings">Conta Poupança</SelectItem>
+                        <SelectItem value="credit">Cartão de Crédito</SelectItem>
+                        <SelectItem value="investment">Investimento</SelectItem>
+                        <SelectItem value="wallet">Carteira</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <Button className="w-full" onClick={handleAddAccount}>
                     Adicionar Conta
                   </Button>
@@ -113,7 +134,9 @@ const Accounts = () => {
                   <div className="text-sm text-muted-foreground mt-1">
                     {account.type === "checking" ? "Conta Corrente" : 
                      account.type === "savings" ? "Conta Poupança" : 
-                     account.type === "investment" ? "Investimento" : "Outra"}
+                     account.type === "investment" ? "Investimento" : 
+                     account.type === "credit" ? "Cartão de Crédito" :
+                     account.type === "wallet" ? "Carteira" : "Outra"}
                   </div>
                 </CardContent>
               </Card>

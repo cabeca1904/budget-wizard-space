@@ -6,10 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Calendar, Mail } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart, LineChart, PieChart } from "@/components/ui/chart";
+import { BarChart, LineChart, PieChart } from "@/components/ui/custom-charts";
 import { initializeData, FinanceData, getTotalsByCategory } from "@/lib/storage";
 import { useToast } from "@/hooks/use-toast";
-import { DateRange } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -17,6 +16,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
+// Define DateRange type
+interface DateRange {
+  from: Date | undefined;
+  to: Date | undefined;
+}
 
 const Reports = () => {
   const { toast } = useToast();
