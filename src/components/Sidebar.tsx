@@ -9,6 +9,7 @@ import {
   ChevronRight,
   PlusCircle,
   Download,
+  Calendar
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -50,6 +51,12 @@ export function Sidebar({ className }: SidebarProps) {
       label: "Categorias",
       href: "/categories",
       active: window.location.pathname === "/categories",
+    },
+    {
+      icon: Calendar,
+      label: "Calendário",
+      href: "/calendar",
+      active: window.location.pathname === "/calendar",
     },
     {
       icon: FileText,

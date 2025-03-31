@@ -9,6 +9,7 @@ import Accounts from "./pages/Accounts";
 import Categories from "./pages/Categories";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import Calendar from "./pages/Calendar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/calendar" element={<Calendar />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

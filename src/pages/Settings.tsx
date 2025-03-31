@@ -32,9 +32,8 @@ const Settings = () => {
           <h1 className="text-3xl font-bold mb-6">Configurações</h1>
           
           <Tabs defaultValue="general">
-            <TabsList className="mb-6 grid w-full max-w-md grid-cols-2 h-10">
+            <TabsList className="mb-6 grid w-full max-w-md grid-cols-1 h-10">
               <TabsTrigger value="general">Geral</TabsTrigger>
-              <TabsTrigger value="reports">Relatórios</TabsTrigger>
             </TabsList>
             
             <TabsContent value="general">
@@ -60,11 +59,7 @@ const Settings = () => {
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="reports">
-              <div className="grid gap-6 max-w-2xl">
+                
                 <Card>
                   <CardHeader>
                     <CardTitle>Envio de Relatórios</CardTitle>
