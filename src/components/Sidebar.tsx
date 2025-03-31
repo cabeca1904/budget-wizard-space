@@ -2,9 +2,7 @@
 import {
   LayoutDashboard,
   Wallet,
-  CreditCard,
   BarChart4,
-  Target,
   FileText,
   Settings,
   ChevronLeft,
@@ -17,6 +15,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Link } from "react-router-dom";
 
 interface SidebarProps {
   className?: string;
@@ -37,38 +36,32 @@ export function Sidebar({ className }: SidebarProps) {
     {
       icon: LayoutDashboard,
       label: "Visão Geral",
-      href: "#",
-      active: true,
+      href: "/",
+      active: window.location.pathname === "/",
     },
     {
       icon: Wallet,
       label: "Contas",
-      href: "#accounts",
-    },
-    {
-      icon: CreditCard,
-      label: "Transações",
-      href: "#transactions",
+      href: "/accounts",
+      active: window.location.pathname === "/accounts",
     },
     {
       icon: BarChart4,
       label: "Categorias",
-      href: "#categories",
-    },
-    {
-      icon: Target,
-      label: "Metas",
-      href: "#goals",
+      href: "/categories",
+      active: window.location.pathname === "/categories",
     },
     {
       icon: FileText,
       label: "Relatórios",
-      href: "#reports",
+      href: "/reports",
+      active: window.location.pathname === "/reports",
     },
     {
       icon: Settings,
       label: "Configurações",
-      href: "#settings",
+      href: "/settings",
+      active: window.location.pathname === "/settings",
     },
   ];
 
@@ -101,9 +94,9 @@ export function Sidebar({ className }: SidebarProps) {
       <div className="flex-1 overflow-y-auto py-2">
         <nav className="space-y-1 px-2">
           {menuItems.map((item) => (
-            <a
+            <Link
               key={item.label}
-              href={item.href}
+              to={item.href}
               className={cn(
                 "flex items-center px-3 py-2 text-sm rounded-md transition-colors",
                 item.active
@@ -120,7 +113,7 @@ export function Sidebar({ className }: SidebarProps) {
                 )}
               />
               {!isCollapsed && <span className="ml-3">{item.label}</span>}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
