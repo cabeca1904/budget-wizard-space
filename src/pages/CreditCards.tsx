@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,12 +39,25 @@ const creditCardSchema = z.object({
 type CreditCardFormValues = z.infer<typeof creditCardSchema>;
 
 export default function CreditCards() {
-  const [data, setData] = useState<FinanceData>(initializeData());
+  const [data, setData] = useState<FinanceData>({
+    accounts: [],
+    categories: [],
+    transactions: [],
+    goals: [],
+    creditCards: [],
+    lastUpdated: new Date().toISOString()
+  });
   const [selectedCard, setSelectedCard] = useState<CreditCard | null>(null);
   const [isNewCard, setIsNewCard] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  // Load data on component mount
+  useEffect(() => {
+    const loadedData = initializeData();
+    setData(loadedData);
+  }, []);
 
   const form = useForm<CreditCardFormValues>({
     resolver: zodResolver(creditCardSchema),
