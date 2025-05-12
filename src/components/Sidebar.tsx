@@ -9,7 +9,8 @@ import {
   ChevronRight,
   PlusCircle,
   Download,
-  Calendar
+  Calendar,
+  CreditCard
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -45,6 +46,12 @@ export function Sidebar({ className }: SidebarProps) {
       label: "Contas",
       href: "/accounts",
       active: window.location.pathname === "/accounts",
+    },
+    {
+      icon: CreditCard,
+      label: "Cartões",
+      href: "/credit-cards",
+      active: window.location.pathname === "/credit-cards",
     },
     {
       icon: BarChart4,

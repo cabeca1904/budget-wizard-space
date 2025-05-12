@@ -1,4 +1,3 @@
-
 // Types for our finance data
 export interface Account {
   id: string;
@@ -40,12 +39,24 @@ export interface Goal {
   color: string;
 }
 
+export interface CreditCard {
+  id: string;
+  bankName: string;
+  cardBrand: "visa" | "mastercard" | "elo" | "american-express" | "other";
+  closingDate: number; // Day of month
+  dueDate: number; // Day of month
+  limit: number;
+  currentBill: number;
+  color?: string;
+}
+
 // Shape of our entire financial data
 export interface FinanceData {
   accounts: Account[];
   categories: Category[];
   transactions: Transaction[];
   goals: Goal[];
+  creditCards: CreditCard[];
   lastUpdated: string;
 }
 
@@ -191,6 +202,28 @@ const defaultData: FinanceData = {
       color: "#10b981"
     }
   ],
+  creditCards: [
+    {
+      id: "card1",
+      bankName: "Nubank",
+      cardBrand: "mastercard",
+      closingDate: 20, // 20th day of the month
+      dueDate: 28, // 28th day of the month
+      limit: 3500,
+      currentBill: 1275.45,
+      color: "#8A05BE"
+    },
+    {
+      id: "card2",
+      bankName: "Itaú",
+      cardBrand: "visa",
+      closingDate: 15, 
+      dueDate: 22,
+      limit: 5000,
+      currentBill: 2130.80,
+      color: "#EC7000"
+    }
+  ],
   lastUpdated: new Date().toISOString()
 };
 
@@ -314,4 +347,9 @@ export function importData(jsonData: string): boolean {
     console.error("Error importing data:", error);
     return false;
   }
+}
+
+// Helper function to get a credit card by ID
+export function getCreditCardById(data: FinanceData, id: string): CreditCard | undefined {
+  return data.creditCards.find((c) => c.id === id);
 }
