@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -10,9 +9,7 @@ import {
   CreditCard as CreditCardIcon, 
   PlusCircle, 
   Edit, 
-  Trash2, 
-  Visa, 
-  Mastercard,
+  Trash2,
   CreditCard as CardIcon,
   AlertCircle
 } from "lucide-react";
@@ -68,7 +65,13 @@ export default function CreditCards() {
     if (isNewCard) {
       const newCard: CreditCard = {
         id: uuidv4(),
-        ...values,
+        bankName: values.bankName,
+        cardBrand: values.cardBrand,
+        closingDate: values.closingDate,
+        dueDate: values.dueDate,
+        limit: values.limit,
+        currentBill: values.currentBill,
+        color: values.color,
       };
       updatedData.creditCards.push(newCard);
       toast({
@@ -169,14 +172,8 @@ export default function CreditCards() {
   };
 
   const getBrandIcon = (brand: CreditCard["cardBrand"]) => {
-    switch (brand) {
-      case "visa":
-        return <Visa className="h-6 w-6" />;
-      case "mastercard":
-        return <Mastercard className="h-6 w-6" />;
-      default:
-        return <CardIcon className="h-6 w-6" />;
-    }
+    // Use CardIcon for all card brands since we don't have specific icons
+    return <CardIcon className="h-6 w-6" />;
   };
 
   const formatDay = (day: number) => {
